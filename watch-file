@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+set -e
+
+if [[ -z $2 ]]; then
+  echo 'Usage: ./watch-file [file-name] [command on change]'
+  exit 1
+fi
+
+FILE_CHECKSUM='a'
+
+FILE=$1
+CMD=$2
+
+while [ true ];
+do
+  NEW_CHECKSUM=`md5 -q $FILE`
+
+  if [ $FILE_CHECKSUM != $NEW_CHECKSUM ]; then
+    FILE_CHECKSUM=$NEW_CHECKSUM
+    $CMD
+  fi
+  sleep 2
+done
